@@ -1,0 +1,19 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  roles:
+    - housekeeping
+#  tasks: 
+#    - name: Install epel
+#      yum: 
+#        name: epel-release
+#        state: latest
+#
+# 
+#    - name: Update
+#      yum:
+#        name: '*'
+#        state: latest
+#    
+#        #- include: setup.yml
