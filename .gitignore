@@ -1,0 +1,8 @@
+provisioning/rolesansible-role*
+**/_depricated
+**/untracked-files
+**/main.retry
+.vagrant
+**/.*.swp
+_selinux_has_been_disabled
+ansible.log
