@@ -47,11 +47,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell, inline: "yum -y install ansible"
 
   # Disable selinux and reboot
-  unless FileTest.exist?("./untracked-files/first_boot_selinux_disabled")
+  unless FileTest.exist?("./tmp_first_boot_selinux_disabled")
     config.vm.provision :shell, inline: "sed -i s/^SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config"
     config.vm.provision :reload
     require 'fileutils'
-    FileUtils.touch("./first_boot_selinux_disabled")
+    FileUtils.touch("./tmp_first_boot_selinux_disabled")
   end
 
   # Set ansible roles environment variable
