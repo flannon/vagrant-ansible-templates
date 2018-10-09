@@ -32,4 +32,4 @@
     - ntp
     - logrotate
     - java
-    - jenkins
+    - solr

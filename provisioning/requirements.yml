@@ -32,7 +32,7 @@
   version: 1.9.2
   name: java
 
-# jenkins role
-- src: https://github.com/geerlingguy/ansible-role-jenkins
-  version: 3.6.0
-  name: jenkins
+# solr role
+- src: https://github.com/geerlingguy/ansible-role-solr
+  version: 4.3.0
+  name: solr
