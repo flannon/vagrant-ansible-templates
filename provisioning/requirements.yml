@@ -27,8 +27,8 @@
   version: 2.0.1
   name: firewall
 
-# awx role
-- src: https://github.com/flannon/ansible-role-awx
+# nginx role
+- src: https://github.com/geerlingguy/ansible-role-nginx
   version: master
-  name: awx
+  name: nginx
 
