@@ -15,6 +15,7 @@
       - "443"
       - "8052"
       - "8080"
+      - "8983"
     firewall_additional_rules:
       - "iptables -A INPUT -p icmp -m comment --comment '000 accept all icmp' -j ACCEPT"
       - "iptables -A INPUT -i lo -m comment --comment '001 accept all to lo interface' -j ACCEPT"
@@ -25,7 +26,9 @@
       - "iptables -A OUTPUT -o lo -j ACCEPT"
       - "iptables -A INPUT -m comment --comment '910 deny all other input requests' -j DROP"
     firewall_disable_firewalld: true
-  
+    solr_version: "6.5.0"
+    solr_port: "8983"
+
   roles:
     - housekeeping
     - firewall
@@ -33,3 +36,4 @@
     - logrotate
     - java
     - solr
+    - nginx

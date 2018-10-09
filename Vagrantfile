@@ -30,6 +30,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     virtualbox__hostonly: true
   config.vm.network :forwarded_port, guest: 8052, host: 8052,
     virtualbox__hostonly: true
+  config.vm.network :forwarded_port, guest: 8983, host: 8983,
+    virtualbox__hostonly: true
 
   config.vm.provider :virtualbox do |vb|
     vb.name = HOSTNAME

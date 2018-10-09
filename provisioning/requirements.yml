@@ -36,3 +36,8 @@
 - src: https://github.com/geerlingguy/ansible-role-solr
   version: 4.3.0
   name: solr
+
+# nginx role
+- src: https://github.com/geerlingguy/ansible-role-nginx
+  version: master
+  name: nginx
