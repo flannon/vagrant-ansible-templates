@@ -31,7 +31,5 @@
     - firewall
     - ntp
     - logrotate
-    - awx
-
-
-
+    - java
+    - jenkins
