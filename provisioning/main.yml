@@ -25,7 +25,11 @@
       - "iptables -A OUTPUT -o lo -j ACCEPT"
       - "iptables -A INPUT -m comment --comment '910 deny all other input requests' -j DROP"
     firewall_disable_firewalld: true
-    jenkins_plugins: [Git,Mailer]
+    jenkins_plugins: 
+      - "git"
+      - "mailer"
+    jenkins_plugins_install_dependencies: "yes"
+    jenkins_plugins_state: "latest"
   
   roles:
     - housekeeping
