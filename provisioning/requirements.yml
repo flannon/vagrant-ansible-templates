@@ -33,8 +33,8 @@
   name: java
 
 # solr role
-- src: https://github.com/geerlingguy/ansible-role-solr
-  version: 4.3.0
+- src: https://github.com/dxu1789/ansible-role-solr
+  version: master
   name: solr
 
 # nginx role
