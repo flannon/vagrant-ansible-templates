@@ -3,7 +3,6 @@
   become: yes
   gather_facts: true
   remote_user: root
-
   vars: 
     ntp_manage_config: true
     ntp_timezone: America/New_York
@@ -28,7 +27,18 @@
     firewall_disable_firewalld: true
     solr_version: "6.5.0"
     solr_port: "8983"
-
+    solr_timezone: "EST"
+    nginx_remove_default_vhost: true
+    nginx_vhosts:
+      - listen: "80"
+        server_name: "localhost"
+        root: "/opt/solr"
+        template: "{{ nginx_vhost_template }}"
+        filename: "solr.conf"
+        extra_parameters: |
+          location / {
+            proxy_pass http://localhost:8983;
+          }
   roles:
     - housekeeping
     - firewall
