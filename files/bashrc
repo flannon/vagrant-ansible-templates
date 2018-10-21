@@ -7,8 +7,9 @@ fi
 
 # User specific aliases and functions
 
-alias rm='rm -i'
-alias cp='cp -i'
-alias mv='mv -i'
+alias c=clear
+alias lo=exit
+alias ls="ls -F"
+alias rm="rm -i"
 
 set -o vi
