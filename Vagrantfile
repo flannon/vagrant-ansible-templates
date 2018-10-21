@@ -3,8 +3,9 @@
 
 Vagrant.require_version ">= 2.0.1"
 
-HOSTNAME = "default"
+HOSTNAME = "workstation"
 ANSIBLEROLE = "#{HOSTNAME}"
+IPADDR = "192.168.50.99"
 CPUS = "2"
 MEMORY = "1024"
 MULTIVOL = false
@@ -24,7 +25,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.box = "centos/7"
   config.ssh.insert_key = false
-  config.vm.network :private_network, ip: "172.25.250.254",
+  config.vm.network :private_network, ip: IPADDR,
     virtualbox__hostonly: true
   config.vm.network :forwarded_port, guest: 80, host: 1080,
     virtualbox__hostonly: true
