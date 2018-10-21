@@ -56,15 +56,55 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     FileUtils.touch("./untracked-files/first_boot_selinux_disabled")
   end
 
-  # Load files
+  # Load bashrc
   config.vm.provision "file", source: "./files/bashrc", 
      destination: "${HOME}/.bashrc"
   config.vm.provision "file", source: "./files/bashrc", 
     destination: "/home/vagrant/.bashrc"
+
+  # Load ssh keys
   config.vm.provision "file", source: "./files/vagrant", 
     destination: "/home/vagrant/.ssh/id_rsa"
-  config.vm.provision "file", source: "./files/vagrant.pub", 
+  config.vm.provision :file, source: "./files/vagrant.pub", 
     destination: "/home/vagrant/.ssh/id_rsa.pub"
+  
+  # Load rh lab hosts ip addrs
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.254 workstation.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.254 workstation.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.8 utility.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.8 utility.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.9 tower.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.9 tower.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.10 servera.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.10 servera.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.11 serverb.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.11 serverb.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.12 serverc.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.12 serverc.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.13 serverd.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.13 serverd.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.14 servere.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.14 servere.lab.example.com' \
+       >> /etc/hosts"
+  config.vm.provision :shell, 
+    inline: "[[ $(grep '172.25.250.15 serverf.lab.example.com' \
+      /etc/hosts)  ]] || echo '172.25.250.15 serverf.lab.example.com' \
+       >> /etc/hosts"
   
   # Set ansible roles environment variable
   ENV['ANSIBLE_ROLES_PATH'] = "#{VAGRANTROOT}/ansible/roles"
