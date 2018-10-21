@@ -6,3 +6,4 @@ provisioning/rolesansible-role*
 **/.*.swp
 _selinux_has_been_disabled
 ansible.log
+ansible/roles
