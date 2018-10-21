@@ -26,8 +26,8 @@
       - "iptables -A INPUT -m comment --comment '910 deny all other input requests' -j DROP"
     firewall_disable_firewalld: true
   
-  #roles:
-    #- housekeeping
+  roles:
+   - housekeeping
     #- firewall
     #- ntp
     #- logrotate
