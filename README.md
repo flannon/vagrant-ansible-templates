@@ -41,4 +41,7 @@ To connect to your vagrant box you can,
 
     $ vagrant ssh
 
+Or, to connect directly from a local shell to the bagrant box,
+
+    $ ssh vagrant@172.25.250.254 -i ~/.vagrant.d/insecure_private_key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o IdentitiesOnly=yes
 

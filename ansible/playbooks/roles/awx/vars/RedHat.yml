@@ -1,0 +1,29 @@
+---
+# from defaults file for awx
+#awx_repo: https://github.com/ansible/awx.git
+#awx_repo_dir: "~/awx"
+#awx_version: development
+#awx_keep_updated: no
+
+#awx_run_install_playbook: yes
+# vars file for awx
+#ansible_ssh_host:
+#  - 127.0.0.1
+
+#client_ssh_host:
+# - 192.168.50.100
+
+awx_packages:
+  - ansible
+  - docker
+  - python-docker-py
+  - git
+
+    # - '@Development tools'
+    # - gettext
+    # - gcc-c++
+    # - bzip2
+
+    #postgres_data_dir: /vagrant/untracked-files/pgdocker  
+postgres_data_dir: /tmp/pgdocker  
+  

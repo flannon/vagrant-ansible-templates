@@ -1,0 +1,53 @@
+---
+# tasks file for awx
+- name: Include OS specific vars
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Ensure ansible packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ awx_packages }}"
+
+  #- name: Ensure ansible hosts file
+  #template:
+  #  src: ansible-hosts.j2
+  #  dest: /etc/ansible/hosts
+
+  ###
+- name: mkdir /etc/ansible/group_vars
+  file: 
+    path: /etc/ansible/group_vars
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+  
+- name: Ensure group_vars server file
+  template:
+    src: group-vars-servers.j2
+    dest: /etc/ansible/group_vars/servers
+
+- name: Clone AWX repo
+  git: 
+    repo: "{{ awx_repo }}"
+    dest: "{{ awx_repo_dir }}"
+    version: "{{ awx_version }}"
+    update: "{{ awx_keep_updated }}"
+    force: yes
+    accept_hostkey: yes
+
+- name: Ensure awx inventory file
+  template:
+    src: awx-inventory.1.0.4.j2 
+    dest: "{{ awx_repo_dir }}/installer/inventory"
+
+- name: Ensure docker service is enabled and running
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- include_tasks: awx-install-playbook.yml
+  #include: awx-install-playbook.yml
+  when: awx_run_install_playbook

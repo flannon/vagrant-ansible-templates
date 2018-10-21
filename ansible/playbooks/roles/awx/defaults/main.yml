@@ -1,0 +1,7 @@
+---
+# defaults file for awx
+awx_repo: https://github.com/ansible/awx.git
+awx_repo_dir: "/opt/awx"
+awx_version: 1.0.4
+awx_keep_updated: no
+awx_run_install_playbook: yes

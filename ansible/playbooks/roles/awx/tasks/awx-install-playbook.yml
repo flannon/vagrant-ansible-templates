@@ -1,0 +1,13 @@
+---
+- name: Run AWX installation playbook
+  command: "ansible-playbook -i inventory install.yml"
+  args:
+    chdir: "{{ awx_repo_dir }}/installer"
+    creates: /etc/awx_playbook_complete
+
+- name: Make a file to mark completion of playbook
+  file:
+    path: /etc/awx_playbook_complete
+    state: touch
+  changed_when: False  
+
