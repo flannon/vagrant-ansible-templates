@@ -13,6 +13,7 @@ MOUNTPOINT = "/mnt"
 VAGRANTDIR = File.expand_path(File.dirname(__FILE__))
 VAGRANTROOT = File.dirname(__FILE__)
 VAGRANTFILE_API_VERSION = "2"
+DIRNAME=File.dirname(__FILE__)
 
 # Ensure vagrant plugins
 required_plugins = %w( vagrant-vbguest vagrant-scp vagrant-share vagrant-persistent-storage vagrant-reload )
@@ -46,27 +47,31 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.hostname = HOSTNAME + ".local"
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder "#{DIRNAME}", "/vagrant-#{HOSTNAME}"
+  #config.vm.provision :shell, inline: "rm -rf --one-file-system /vagrant"
+  config.vm.provision :shell, inline: "[[ -d /vagrant ]] && mv -fnu /vagrant /vagrant-BADSYNC"
+  config.vm.provision :shell, inline: "ln -s /vagrant-#{HOSTNAME}/ /vagrant"
   config.vm.provision :shell, inline: "yum -y install ansible"
 
   # Disable selinux and reboot
   unless FileTest.exist?("./untracked-files/first_boot_selinux_disabled")
     config.vm.provision :shell, inline: "sed -i s/^SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config"
     config.vm.provision :reload
+    #config.vm.synced_folder ".", "/vagrant"
     require 'fileutils'
-    FileUtils.touch("./untracked-files/first_boot_selinux_disabled")
+    FileUtils.touch("#{DIRNAME}/untracked-files/first_boot_selinux_disabled")
   end
 
   # Load bashrc
-  config.vm.provision "file", source: "./files/bashrc", 
+  config.vm.provision "file", source: "#{DIRNAME}/files/bashrc", 
      destination: "${HOME}/.bashrc"
-  config.vm.provision "file", source: "./files/bashrc", 
+  config.vm.provision "file", source: "#{DIRNAME}/files/bashrc", 
     destination: "/home/vagrant/.bashrc"
 
   # Load ssh keys
-  config.vm.provision "file", source: "./files/vagrant", 
+  config.vm.provision "file", source: "#{DIRNAME}/files/vagrant", 
     destination: "/home/vagrant/.ssh/id_rsa"
-  config.vm.provision :file, source: "./files/vagrant.pub", 
+  config.vm.provision :file, source: "#{DIRNAME}/files/vagrant.pub", 
     destination: "/home/vagrant/.ssh/id_rsa.pub"
   
   # Load rh lab hosts ip addrs
