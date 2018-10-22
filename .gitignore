@@ -5,5 +5,4 @@ untracked-files
 .vagrant
 **/.*.swp
 _selinux_has_been_disabled
-ansible.log
-ansible/roles
+**ansible.log

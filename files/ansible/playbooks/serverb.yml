@@ -2,7 +2,7 @@
 - hosts: serverb
   become: yes
   gather_facts: true
-  remote_user: root
+  remote_user: vagrant
 
   vars: 
     ntp_manage_config: true
@@ -28,9 +28,9 @@
   
   roles:
     - housekeeping
-    - firewall
-    - ntp
-    - logrotate
+    #  - firewall
+    #- ntp
+    # - logrotate
 
 
 

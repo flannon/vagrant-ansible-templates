@@ -136,8 +136,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ansible.verbose = "v"
     ansible.config_file = "ansible/ansible.cfg"
     ansible.galaxy_role_file = "ansible/requirements.yml"
-    #ansible.playbook = "ansible/playbooks/#{ANSIBLEROLE}.yml"
-    ansible.playbook = "ansible/playbooks/workstation.yml"
+    ansible.playbook = "ansible/playbooks/#{ANSIBLEROLE}.yml"
+    #ansible.playbook = "ansible/playbooks/workstation.yml"
     #ansible.groups = {
     #  "group1" => ["#{HOSTNAME}"], 
     ##  "group1:vars" => {"ntp_manage_config" => true,
