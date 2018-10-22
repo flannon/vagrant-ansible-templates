@@ -47,21 +47,26 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.hostname = HOSTNAME + ".local"
-  config.vm.synced_folder "#{DIRNAME}", "/vagrant-#{HOSTNAME}"
+  #config.vm.synced_folder "#{DIRNAME}", "/vagrant-#{HOSTNAME}"
+  #config.vm.synced_folder "#{DIRNAME}", "/vagrant"
   #config.vm.provision :shell, inline: "rm -rf --one-file-system /vagrant"
-  config.vm.provision :shell, inline: "[[ -d /vagrant ]] && mv -fnu /vagrant /vagrant-BADSYNC"
-  config.vm.provision :shell, inline: "ln -s /vagrant-#{HOSTNAME}/ /vagrant"
+  #config.vm.provision :shell, inline: "[[ -d /vagrant ]] && mv -fnu /vagrant /vagrant-BADSYNC"
+  #config.vm.provision :shell, inline: "ln -s /vagrant-#{HOSTNAME}/ /vagrant"
   config.vm.provision :shell, inline: "yum -y install ansible"
+  config.vm.provision "file", source: "~/.gitconfig", destination: ".gitconfig"
 
   # Disable selinux and reboot
-  unless FileTest.exist?("./untracked-files/first_boot_selinux_disabled")
+  unless FileTest.exist?("./untracked-files/first_boot_complete")
+    config.vm.provision :shell, inline: "yum -y update"
     config.vm.provision :shell, inline: "sed -i s/^SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config"
     config.vm.provision :reload
     #config.vm.synced_folder ".", "/vagrant"
     require 'fileutils'
-    FileUtils.touch("#{DIRNAME}/untracked-files/first_boot_selinux_disabled")
+    FileUtils.touch("#{DIRNAME}/untracked-files/first_boot_complete")
   end
 
+  # Install git and wget
+  config.vm.provision :shell, inline: "yum -y install git wget"
   # Load bashrc
   config.vm.provision "file", source: "#{DIRNAME}/files/bashrc", 
      destination: "${HOME}/.bashrc"
@@ -74,60 +79,65 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :file, source: "#{DIRNAME}/files/vagrant.pub", 
     destination: "/home/vagrant/.ssh/id_rsa.pub"
   
-  # Load rh lab hosts ip addrs
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.254 workstation.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.254 workstation.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.8 utility.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.8 utility.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.9 tower.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.9 tower.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.10 servera.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.10 servera.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.11 serverb.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.11 serverb.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.12 serverc.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.12 serverc.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.13 serverd.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.13 serverd.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.14 servere.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.14 servere.lab.example.com' \
-       >> /etc/hosts"
-  config.vm.provision :shell, 
-    inline: "[[ $(grep '172.25.250.15 serverf.lab.example.com' \
-      /etc/hosts)  ]] || echo '172.25.250.15 serverf.lab.example.com' \
-       >> /etc/hosts"
+  # Load /etc/hosts
+  #config.vm.provision "file", source: "./files/hosts.sh", destination: "/tmp/hosts.sh"
+  config.vm.provision "shell", path: "./bin/hosts.sh", privileged: true
   
   # Set ansible roles environment variable
   ENV['ANSIBLE_ROLES_PATH'] = "#{VAGRANTROOT}/ansible/roles"
 
   config.vm.define HOSTNAME
 
+
+  # Load ansible config to ~vagrant on the guest
+  config.vm.provision "file", source: "./files/ansible/ansible.cfg", 
+    destination: "~vagrant/ansible.cfg"
+  config.vm.provision "file", source: "./files/ansible/inventory", 
+    destination: "~vagrant/inventory"
+  config.vm.provision "file", source: "./files/ansible/requirements.yml", 
+    destination: "~vagrant/requirements.yml"
+  config.vm.provision "shell", inline: "[[ -d ~vagrant/playbooks ]] || \
+     mkdir ~vagrant/playbooks/ && chown vagrant: ~vagrant/playbooks"
+  config.vm.provision "file", source: "./files/ansible/playbooks/awx.yml", 
+    destination: "~vagrant/playbooks/awx.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/default.yml", 
+    destination: "~vagrant/playbooks/default.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/servera.yml", 
+    destination: "~vagrant/playbooks/servera.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/serverb.yml", 
+    destination: "~vagrant/playbooks/serverb.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/servera.yml", 
+    destination: "~vagrant/playbooks/serverc.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/serverd.yml", 
+    destination: "~vagrant/playbooks/serverd.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/servere.yml", 
+    destination: "~vagrant/playbooks/servere.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/serverf.yml", 
+    destination: "~vagrant/playbooks/serverf.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/tower.yml", 
+    destination: "~vagrant/playbooks/tower.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/utility.yml", 
+    destination: "~vagrant/playbooks/utility.yml"
+  config.vm.provision "file", 
+    source: "./files/ansible/playbooks/workstation.yml", 
+    destination: "~vagrant/playbooks/workstation.yml"
+
   # Run ansible provisioning 
   config.vm.provision :ansible do |ansible|
     ansible.verbose = "v"
-    ansible.version = "latest"
-    ansible.compatibility_mode = "2.0"
-    ansible.become = true
-    ansible.become_user = "root"
     ansible.config_file = "ansible/ansible.cfg"
-    ansible.galaxy_roles_path = "ansible/roles"
     ansible.galaxy_role_file = "ansible/requirements.yml"
-    ansible.playbook = "ansible/playbooks/#{ANSIBLEROLE}.yml"
+    #ansible.playbook = "ansible/playbooks/#{ANSIBLEROLE}.yml"
+    ansible.playbook = "ansible/playbooks/workstation.yml"
     #ansible.groups = {
     #  "group1" => ["#{HOSTNAME}"], 
     ##  "group1:vars" => {"ntp_manage_config" => true,

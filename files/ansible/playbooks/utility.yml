@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: utility
   become: yes
   gather_facts: true
   remote_user: vagrant
@@ -31,6 +31,4 @@
     #- firewall
     #- ntp
     #- logrotate
-
-
 

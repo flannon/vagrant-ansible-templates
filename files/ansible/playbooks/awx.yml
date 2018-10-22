@@ -1,5 +1,5 @@
 ---
-- hosts: all
+- hosts: awx
   become: yes
   gather_facts: true
   remote_user: vagrant
@@ -28,9 +28,10 @@
   
   roles:
     - housekeeping
-    #- firewall
-    #- ntp
-    #- logrotate
+    - firewall
+    - ntp
+    - logrotate
+    - awx
 
 
 
