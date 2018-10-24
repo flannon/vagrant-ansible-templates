@@ -7,28 +7,32 @@
 #      at http://docs.ansible.com/ansible/galaxy.html
 ##
 
-# housekeeping role
-- src: https://github.com/nyudlts/ansible-role-housekeeping
+# awx role
+- src: https://github.com/flannon/ansible-role-awx
   version: master
-  name: housekeeping
-
-# ntp role
-- src: https://github.com/geerlingguy/ansible-role-ntp
-  version: 1.5.3
-  name: ntp
-
-# logrotate role
-- src: https://github.com/nickhammond/ansible-logrotate
-  version: v0.0.5
-  name: logrotate
+  name: awx
 
 # firewall role
 - src: https://github.com/geerlingguy/ansible-role-firewall
   version: 2.0.1
   name: firewall
 
-# awx role
-- src: https://github.com/flannon/ansible-role-awx
+# housekeeping role
+- src: https://github.com/nyudlts/ansible-role-housekeeping
   version: master
-  name: awx
+  name: housekeeping
 
+# logrotate role
+- src: https://github.com/nickhammond/ansible-logrotate
+  version: v0.0.5
+  name: logrotate
+
+# ntp role
+- src: https://github.com/geerlingguy/ansible-role-ntp
+  version: 1.5.3
+  name: ntp
+
+# solr role
+- src: https://github.com/nyudlts/ansible-role-solr
+  version: master
+  name: solr
