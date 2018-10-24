@@ -1,28 +1,43 @@
 ---
+localhost:
+  hosts:
+    localhost
+  vars:
+    ansible_connection: local
+
 workstation:
   hosts:
     workstation.lab.example.com
+
 utility:
   hosts:
     utility.lab.example.com
+
 tower:
   hosts:
     tower.lab.example.com
+    
 servera:
   hosts:
     servera.lab.example.com
+
 serverb:
   hosts:
     serverb.lab.example.com
+
 serverc:
   hosts:
     serverc.lab.example.com
+    
 serverd:
   hosts:
     serverd.lab.example.com
+    
 servere:
   hosts:
     servere.lab.example.com
+
 serverf:
   hosts:
     serverf.lab.example.com
+

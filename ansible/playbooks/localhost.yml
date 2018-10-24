@@ -1,5 +1,5 @@
 ---
-- hosts: default
+- hosts: <HOSTNAME>
   become: yes
   gather_facts: true
   remote_user: vagrant
@@ -27,9 +27,9 @@
     firewall_disable_firewalld: true
   
   roles:
-   - housekeeping
+    - housekeeping
     #- firewall
-    #- ntp
+    - ntp
     #- logrotate
 
 

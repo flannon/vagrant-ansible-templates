@@ -28,9 +28,9 @@
   
   roles:
     - housekeeping
-    #- firewall
+    #  - firewall
     #- ntp
-    #- logrotate
+    # - logrotate
 
 
 
