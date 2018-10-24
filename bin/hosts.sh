@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# Red Hat Lab hosts
 [[ $(grep '172.25.250.254 workstation.lab.example.com workstation' /etc/hosts) ]] || echo '172.25.250.254 workstation.lab.example.com workstation' >> /etc/hosts
 
 [[ $(grep '172.25.250.8 utility.lab.example.com utility' /etc/hosts) ]] || echo '172.25.250.8 utility.lab.example.com utility' >> /etc/hosts
@@ -18,3 +19,6 @@
 
 [[ $(grep '172.25.250.15 serverf.lab.example.com serverf' /etc/hosts) ]] || echo '172.25.250.15 serverf.lab.example.com servera' >> /etc/hosts
 
+
+# Dlib hosts
+[[ $(grep '172.39.144.12 discovery.dlib.example.com serverf' /etc/hosts) ]] || echo '172.39.144.12 discovery.dlib.example.com servera' >> /etc/hosts
