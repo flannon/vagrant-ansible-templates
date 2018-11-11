@@ -5,10 +5,12 @@ Vagrant.require_version ">= 2.0.1"
 
 HOSTNAME = "templates"
 ANSIBLEROLE = "#{HOSTNAME}"
-IPADDR = "172.25.250.254"
+IPADDR = "192.168.0.1"
 CPUS = "2"
 MEMORY = "1024"
 MULTIVOL = false
+MULTIVOLSIZE = 10240
+MULTIVOLNAME = "#{HOSTNAME}-vol02.vdi"
 MOUNTPOINT = "/mnt"
 VAGRANTROOT = File.expand_path(File.dirname(__FILE__))
 VAGRANTFILE_API_VERSION = "2"
@@ -26,12 +28,43 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
   config.vm.network :private_network, ip: IPADDR,
     virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 80, host: 10080,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 443, host: 10443,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 8052, host: 10052,
-    virtualbox__hostonly: true
+
+  case "netports"
+  when HOSTNAME == "okd"
+    config.vm.network :forwarded_port, guest: 80, host: 80, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 443, host: 443, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 2375, host: 2375, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 2376, host: 2376, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 2379, host: 2379, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 2380, host: 2380, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 5000, host: 5000, 
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 8443, host: 8443, 
+      virtualbox__hostonly: true
+  else
+    config.vm.network :forwarded_port, guest: 80, host: 10080,
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 443, host: 10443,
+      virtualbox__hostonly: true
+    config.vm.network :forwarded_port, guest: 8052, host: 10052,
+      virtualbox__hostonly: true
+  end
+
+
+  # Disable selinux and reboot
+  unless FileTest.exist?("./untracked-files/first_boot_complete")
+    config.vm.provision :shell, inline: "yum -y update"
+    config.vm.provision :shell, inline: "sed -i s/^SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config"
+    config.vm.provision :reload
+    require 'fileutils'
+    FileUtils.touch("#{VAGRANTROOT}/untracked-files/first_boot_complete")
+  end
 
   config.vm.provider :virtualbox do |vb|
     vb.name = HOSTNAME
@@ -46,28 +79,37 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.hostname = HOSTNAME + ".local"
   # I was having trouble with the sync folder.  I never really figured
-  # out what the issue was.  The follwoign lines are left in place
+  # out what the issue was.  The following lines are left in place
   # for the moment in case it crops up again.
   # 
+  #config.vm.synced_folder "./", "/vagrant"
   #config.vm.synced_folder "#{VAGRANTROOT}", "/vagrant-#{HOSTNAME}"
-  #config.vm.synced_folder "#{VAGRANTROOT}", "/vagrant"
+  config.vm.synced_folder "#{VAGRANTROOT}", "/vagrant"
   #config.vm.provision :shell, inline: "rm -rf --one-file-system /vagrant"
   #config.vm.provision :shell, inline: "[[ -d /vagrant ]] && mv -fnu /vagrant /vagrant-BADSYNC"
   #config.vm.provision :shell, inline: "ln -s /vagrant-#{HOSTNAME}/ /vagrant"
+ 
+  if MULTIVOL == true
+    # Create second volume
+    config.vm.provision "shell", inline: "mkdir -p #{MOUNTPOINT}"
+    #config.vm.provision "shell", inline: "mkdir -p /mnt"
+    config.persistent_storage.enabled = true
+    config.persistent_storage.use_lvm = false
+    config.persistent_storage.diskdevice = '/dev/sdb'
+    config.persistent_storage.location = "./untracked-files/#{MULTIVOLNAME}"
+    config.persistent_storage.size = MULTIVOLSIZE
+    config.persistent_storage.mountname = 'xfs'
+    config.persistent_storage.filesystem = 'xfs'
+    config.persistent_storage.mountpoint = MOUNTPOINT
+    config.persistent_storage.mountoptions = ['defaults']
+    config.vm.provision "shell", inline: "mount -a"
+  end
+
+  
   config.vm.provision :shell, inline: "yum -y install ansible"
   config.vm.provision "file", 
     source: "~/.gitconfig", 
     destination: ".gitconfig"
-
-  # Disable selinux and reboot
-  unless FileTest.exist?("./untracked-files/first_boot_complete")
-    config.vm.provision :shell, inline: "yum -y update"
-    config.vm.provision :shell, inline: "sed -i s/^SELINUX=enforcing/SELINUX=permissive/ /etc/selinux/config"
-    config.vm.provision :reload
-    #config.vm.synced_folder ".", "/vagrant"
-    require 'fileutils'
-    FileUtils.touch("#{VAGRANTROOT}/untracked-files/first_boot_complete")
-  end
 
   # Install git and wget
   config.vm.provision :shell, inline: "yum -y install git wget"
@@ -85,6 +127,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   # Load /etc/hosts
   config.vm.provision "shell", path: "./bin/hosts.sh", privileged: true
+  #config.vm.provision "file", 
+  #  source: "./files/hosts", 
+  #  destination: "/etc/hosts"
   
   # Set ansible roles environment variable
   # This is unused and may be set wrong, i.e. as currently
@@ -156,7 +201,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     destination: "~vagrant/playbooks/workstation.yml"
 
   config.vm.provision "file", 
-    source: "#{VAGRANTROOT}/ansible/playbooks/#{HOSTNAME}.yml", 
+    source: "#{VAGRANTROOT}/ansible/playbooks/#{ANSIBLEROLE}.yml", 
     destination: "~vagrant/playbooks/localhost.yml"
 
      

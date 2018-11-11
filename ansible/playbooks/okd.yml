@@ -1,0 +1,112 @@
+---
+- hosts: okd
+  become: yes
+  gather_facts: true
+  remote_user: vagrant
+
+  roles:
+    - housekeeping
+    - firewall
+    - ntp
+    #- logrotate
+
+  vars: 
+    ntp_manage_config: true
+    ntp_timezone: America/New_York
+    firewall_state: started
+    firewall_enabled_at_boot: true
+    firewall_allowed_tcp_ports:
+      - "22"
+      - "80"
+      - "443"
+      - "2375"
+      - "2376"
+      - "2377"
+      - "2379"
+      - "2380"
+      - "2732"
+      - "3121"
+      - "8443"
+    firewall_additional_rules:
+      - "iptables -A INPUT -p icmp -m comment --comment '000 accept all icmp' -j ACCEPT"
+      - "iptables -A INPUT -i lo -m comment --comment '001 accept all to lo interface' -j ACCEPT"
+      - "iptables -A INPUT -m comment --comment '003 accept related established rules' -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+      - "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT"
+      - "iptables -A INPUT -p icmp -j ACCEPT"
+      - "iptables -A INPUT -i lo -j ACCEPT"
+      - "iptables -A OUTPUT -o lo -j ACCEPT"
+      - "iptables -A INPUT -m comment --comment '910 deny all other input requests' -j DROP"
+    firewall_disable_firewalld: true
+    #openshift-release: release-3.9
+
+  tasks:
+    - name: remove ansible 2.7
+      yum:
+        name: ansible-2.7.*
+        state: absent
+
+    - name: ansible 2.6.7
+      yum:
+        name: https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/ansible-2.6.7-1.el7.ans.noarch.rpm 
+        state: present
+        allow_downgrade: no
+        disablerepo: "epel"
+        validate_certs: no
+
+    - name:
+      yum:
+        name: 
+          - git
+          - java-1.8.0-openjdk-headless
+          - httpd-tools
+          - net-tools
+          - patch
+          - python-jinja2
+          - pyOpenSSL
+          - python-lxml
+          - python-cryptography 
+          - python2-pip 
+          - python-devel  
+          - python-passlib
+          - wget
+
+        state: present
+        validate_certs: no
+        enablerepo: "epel"
+
+    - name: ensure /var/lib/docker 0755
+      file:
+        name: /var/lib/docker
+        mode: 0755
+
+    - name: git openshift-ansible
+      git:
+        repo: https://github.com/openshift/openshift-ansible.git
+        dest: ~vagrant/openshift-ansible
+        version: release-3.9
+        
+    - name: chown vagrant openshift-ansible
+      file:
+        path: ~vagrant/openshift-ansible
+        owner: vagrant
+        group: vagrant
+        recurse: true
+
+    #- name: Origin repo
+    ## see https://github.com/openshift/openshift-ansible/issues/7794#issuecomment-378884975
+      #get_url:
+      #  url: https://storage.googleapis.com/origin-ci-test/releases/openshift/origin/master/origin.repo
+      #  dest: /etc/yum.repos.d/origin.repo
+      #  mode: 0644
+
+        #    - name: ansible-playbook prerequisites
+        #command: /usr/bin/ansible-playbook -i inventory/hosts.localhost playbooks/prerequisites.yml
+        #args:
+        #chdir: ~vagrant/openshift-ansible
+
+    #- name: ansible-playbook deploy_cluster
+      #command: /usr/bin/ansible-playbook -i inventory/hosts.localhost playbooks/deploy_cluster.yml
+      #args:
+        #chdir: ~vagrant/openshift-ansible
+
+

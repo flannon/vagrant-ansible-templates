@@ -1,0 +1,4 @@
+# see https://github.com/gshipley/installcentos.git
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4 
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+172.17.0.99		okd.local console console.172.17.0.99.nip.io  

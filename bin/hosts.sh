@@ -22,3 +22,6 @@
 
 # Dlib hosts
 [[ $(grep '172.39.144.12 discovery.dlib.example.com serverf' /etc/hosts) ]] || echo '172.39.144.12 discovery.dlib.example.com servera' >> /etc/hosts
+
+# okd
+[[ $(grep '172.17.0.99 okd.example.com serverf' /etc/hosts) ]] || echo '172.17.0.99 discovery.example.com okd.local' >> /etc/hosts
