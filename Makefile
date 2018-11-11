@@ -5,7 +5,7 @@ DATE = `date +%y%m%d:%H:%M:%S`
 .PHONY: okd
 okd:
 	sed -i '' 's/HOSTNAME = .*/HOSTNAME = "okd"/g' Vagrantfile
-	sed -i '' 's/IPADDR = .*/IPADDR = "172.17.0.99"/g' Vagrantfile
+	sed -i '' 's/IPADDR = .*/IPADDR = "192.168.68.99"/g' Vagrantfile
 	sed -i '' 's/CPUS = .*/CPUS = "4"/g' Vagrantfile
 	sed -i '' 's/MEMORY = .*/MEMORY = "4096"/g' Vagrantfile
 	sed -i '' 's/MULTIVOL = false/MULTIVOL = true/g' Vagrantfile
