@@ -30,7 +30,7 @@ To run the vagrant installer you will need Virtualbox and vagrant vagrant runnin
 Clone vagrant templates, checkout the branch you want to build and
 then vagrant up. i.e. To build vagrant-awx do the following,
 
-    $ git clone -b cantaloupe https://gitlab.com/nyudlts/vagrant-ansible-templates \
+    $ git clone -b cantaloupe https://github.com/nyudlts/vagrant-ansible-templates \
       vagrant-ansible-cantaloupe
     $ cd vagrant-ansible-cantaloupe
     $ vagrant up
