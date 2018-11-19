@@ -1,9 +1,12 @@
 ---
-- hosts: localhost
+- hosts: all
   become: yes
   gather_facts: true
   remote_user: root
   vars:
+    - tomcat8_java_opts:
+      - -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties
+      - -Xmx2g
     - cantaloupe_version: 4.0.2
     - cantaloupe_user: vagrant
     - cantaloupe_group: vagrant
