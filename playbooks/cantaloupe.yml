@@ -1,0 +1,17 @@
+---
+- hosts: localhost
+  become: yes
+  gather_facts: true
+  remote_user: root
+  vars:
+    - cantaloupe_version: 4.0.2
+    - cantaloupe_user: vagrant
+    - cantaloupe_group: vagrant
+    - cantaloupe_deploy_war: yes
+    - cantaloupe_deploy_war_path: /opt/tomcat/webapps
+    - cantaloupe_deploy_war_filename: cantaloupe
+    - cantaloupe_create_FilesystemCache_dir: yes
+  roles:
+    - java
+    - tomcat
+    - cantaloupe

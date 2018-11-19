@@ -1,8 +1,0 @@
-Using these versions of main.yml and redhat.yml should work,
-but I get the following error,
-
-TASK [housekeeping : epel-release] *********************************************
-fatal: [default]: FAILED! => {"msg": "The conditional check 'ansible_os_platform|lower == 'redhat'' failed. The error was: error while evaluating conditional (ansible_os_platform|lower == 'redhat'): 'ansible_os_platform' is undefined\n\nThe error appears to have been in '/Users/kenny/Documents/dlib/vagrant/vagrant-ansible-templates/provisioning/roles/housekeeping/tasks/redhat.yml': line 2, column 3, but may\nbe elsewhere in the file depending on the exact syntax problem.\n\nThe offending line appears to be:\n\n---\n- name: \"epel-release\"\n  ^ here\n"}
-	to retry, use: --limit @/Users/kenny/Documents/dlib/vagrant/vagrant-ansible-templates/provisioning/main.retry
-
-When I move redhat.yml to main.yaml the role works fine.

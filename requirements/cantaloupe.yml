@@ -1,0 +1,14 @@
+---
+# cantaloupe role
+- src: https://github.com/nyudlts/ansible-role-cantaloupe
+  version: master
+  name: cantaloupe
+
+# java role
+- src: https://github.com/geerlingguy/ansible-role-java
+  version: 1.9.2
+  name: java
+
+- src: https://github.com/Islandora-DevOps/ansible-role-tomcat8
+  version: master
+  name: tomcat
