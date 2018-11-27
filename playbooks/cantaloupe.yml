@@ -5,16 +5,23 @@
   remote_user: root
   vars:
     - tomcat8_java_opts:
-      - -Dcantaloupe.config=/opt/cantaloupe/cantaloupe.properties
+      - -Dcantaloupe.config=/opt/tomcat/webapps/cantaloupe/cantaloupe.properties
       - -Xmx2g
     - cantaloupe_version: 4.0.2
-    - cantaloupe_user: vagrant
-    - cantaloupe_group: vagrant
+    - cantaloupe_properties_path: /opt/tomcat/webapps/cantaloupe
+    - cantaloupe_user: tomcat8
+    - cantaloupe_group: tomcat8
     - cantaloupe_deploy_war: yes
     - cantaloupe_deploy_war_path: /opt/tomcat/webapps
     - cantaloupe_deploy_war_filename: cantaloupe
     - cantaloupe_create_FilesystemCache_dir: yes
+    - cantaloupe_admin_enabled: "true"
+    - cantaloupe_admin_password: "admin"
+    - cantaloupe_source_static: FilesystemSource
+    - cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix: /tmp/images/
+    - cantaloupe_processor_jp2: KakaduDemoProcessor
   roles:
     - java
     - tomcat
     - cantaloupe
+    - kakadu

@@ -12,3 +12,7 @@
 - src: https://github.com/Islandora-DevOps/ansible-role-tomcat8
   version: master
   name: tomcat
+
+- src: https://github.com/nyudlts/ansible-role-kakadu
+  version: master
+  name: kakadu
