@@ -7,7 +7,7 @@
     - tomcat8_java_opts:
       - -Dcantaloupe.config=/opt/tomcat/webapps/cantaloupe/cantaloupe.properties
       - -Xmx2g
-    - cantaloupe_version: 4.0.2
+    - cantaloupe_version: 4.1
     - cantaloupe_properties_path: /opt/tomcat/webapps/cantaloupe
     - cantaloupe_user: tomcat8
     - cantaloupe_group: tomcat8
@@ -17,9 +17,11 @@
     - cantaloupe_create_FilesystemCache_dir: yes
     - cantaloupe_admin_enabled: "true"
     - cantaloupe_admin_password: "admin"
-    - cantaloupe_source_static: FilesystemSource
-    - cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix: /tmp/images/
     - cantaloupe_processor_jp2: KakaduDemoProcessor
+    - cantaloupe_test_jp2: true
+    - cantaloupe_source_static: HttpSource
+    - cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: https://storage.googleapis.com/cantaloupe.dlts.org/
+    - cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix: /tmp/images/
   roles:
     - java
     - tomcat

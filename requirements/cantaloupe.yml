@@ -9,10 +9,12 @@
   version: 1.9.2
   name: java
 
+# tomcat role
 - src: https://github.com/Islandora-DevOps/ansible-role-tomcat8
   version: master
   name: tomcat
 
+# kakadu role
 - src: https://github.com/nyudlts/ansible-role-kakadu
   version: master
   name: kakadu
