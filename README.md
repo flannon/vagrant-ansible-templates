@@ -1,40 +1,29 @@
-# vagrant-ansible-templates
-Templates for building vagrant boxes for 
+# vagrant-ansible-cantaloupe
 
+#### Pre-Installation Setup
 
-## Table of Contents
+To run the vagrant installer you will need Virtualbox and vagrant running on your machine. If you're on a Mac the easiest way to install everything you'll need is with homebrew.  The following steps will install homebrew and vagrant
 
-1. [Overview] (#overview)
-2. [Pre-Install] (#pre-install)
-3. [Usage] (#usage)
-
-
-#### Overview
-
-Provides templates for building the follwoing vagrant boxes
-
-    - Centos 7 (templates)
-    - awx
-
-#### Pre-Installaiton Setup
-
-To run the vagrant installer you will need Virtualbox and vagrant vagrant running on your machine. If you're on a Mac the easiest way to install everything you'll need is with homebrew.  The following steps will install homebrew and vagrant
-
-    $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    $ brew cask install virtualbox
-    $ brew cask install vagrant
-
+    /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    brew cask install virtualbox
+    brew cask install vagrant
 
 #### Usage
 
-Clone vagrant templates, checkout the branch you want to build and
-then vagrant up. i.e. To build vagrant-awx do the following,
+- Clone this branch
+- `cd` to project directory
+- Clone this Cantaloupe forked repo branch directly into this directory: https://github.com/nyudlts/cantaloupe/tree/feature/disableHttpAuth
+- run `vagrant up`
+- Navigate here, it should show a customized landing page with NYU logo: http://192.168.50.99:8080/cantaloupe/
 
-    $ git clone -b cantaloupe https://github.com/nyudlts/vagrant-ansible-templates \
-      vagrant-ansible-cantaloupe
-    $ cd vagrant-ansible-cantaloupe
-    $ vagrant up
+#### Iterating Builds
 
+Automatic way: run `vagrant provision`
 
-Cantaloupe image server can then be accessed via:
-    http://192.168.50.99:8080/cantaloupe/
+Manual way:
+
+    vagrant rsync
+    vagrant ssh
+    cd /vagrant/cantaloupe; mvn clean package -DskipTests
+    sudo cp /vagrant/cantaloupe/target/cantaloupe-4.1.1-SNAPSHOT.war /opt/tomcat/webapps/cantaloupe.war
+    sudo systemctl restart tomcat8

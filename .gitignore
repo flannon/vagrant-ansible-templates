@@ -7,3 +7,4 @@ provisioning/rolesansible-role*
 _selinux_has_been_disabled
 ansible.log
 *.DS_STORE
+cantaloupe/

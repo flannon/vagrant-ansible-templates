@@ -32,16 +32,16 @@
             - git
             - maven
           state: latest
-      - name: clone Cantaloupe source
-        git:
-          repo: 'https://github.com/nyudlts/cantaloupe'
-          dest: /home/vagrant/cantaloupe/
-          version: 'feature/disableHttpAuth'
+#      - name: clone Cantaloupe source
+#        git:
+#          repo: 'https://github.com/nyudlts/cantaloupe'
+#          dest: /home/vagrant/cantaloupe/
+#          version: 'feature/disableHttpAuth'
       - name: build Cantaloupe from source
-        shell: "cd /home/vagrant/cantaloupe;mvn clean package -DskipTests"
+        shell: "cd /vagrant/cantaloupe;mvn clean package -DskipTests"
         no_log: true
       - name: copy newly built .war to Tomcat webapps
-        command: "cp /home/vagrant/cantaloupe/target/cantaloupe-4.1.1-SNAPSHOT.war /opt/tomcat/webapps/cantaloupe.war"
+        command: "cp /vagrant/cantaloupe/target/cantaloupe-4.1.1-SNAPSHOT.war /opt/tomcat/webapps/cantaloupe.war"
       - name: copy cantaloupe config file back
         copy:
           src: ../cantaloupe.properties

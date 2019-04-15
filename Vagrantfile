@@ -45,7 +45,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.hostname = HOSTNAME + ".local"
-  config.vm.synced_folder ".", "/vagrant"
+  config.vm.synced_folder ".", "/vagrant", type: "rsync"
   config.vm.provision :shell, inline: "yum -y install ansible"
 
   # Disable selinux and reboot
