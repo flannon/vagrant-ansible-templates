@@ -3,9 +3,9 @@
 
 Vagrant.require_version ">= 2.0.1"
 
-HOSTNAME = "cantaloupe"
-CPUS = "2"
-MEMORY = "1024"
+HOSTNAME = "housekeeping"
+CPUS = "4"
+MEMORY = "4096"
 MULTIVOL = false
 MOUNTPOINT = "/mnt"
 VAGRANTDIR = File.expand_path(File.dirname(__FILE__))
@@ -13,7 +13,6 @@ VAGRANTROOT = File.dirname(__FILE__)
 VAGRANTFILE_API_VERSION = "2"
 
 # Ensure vagrant plugins
-#required_plugins = %w( vagrant-vbguest vagrant-scp vagrant-share vagrant-persistent-storage vagrant vagrant-reload )
 required_plugins = %w( vagrant-vbguest vagrant-scp vagrant-share vagrant-persistent-storage vagrant-reload )
 required_plugins.each do |plugin|
   exec "vagrant plugin install #{plugin};vagrant #{ARGV.join(" ")}" unless Vagrant.has_plugin? plugin || ARGV[0] == 'plugin'
@@ -22,15 +21,7 @@ end
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "centos/7"
   config.ssh.insert_key = false
-  config.vm.network :private_network, ip: "192.168.50.99",
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 80, host: 80,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 443, host: 443,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 8182, host: 8182,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 8080, host: 8080,
+  config.vm.network :private_network, ip: "192.168.50.100",
     virtualbox__hostonly: true
 
   config.vm.provider :virtualbox do |vb|
@@ -63,18 +54,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Run ansible provisioning
   config.vm.provision :ansible do |ansible|
-    ansible.verbose = "v"
-    #ansible.becomr = "root"
+    ansible.compatibility_mode = "2.0"
     ansible.config_file = "ansible.cfg"
-    #ansible.galaxy_role_path = "provisioning/roles"
-    ansible.galaxy_role_file = "requirements/cantaloupe.yml"
-    ansible.playbook = "playbooks/cantaloupe.yml"
-    #ansible.groups = {
-    #  "group1" => ["#HOSTNAME"],
-    #  "group1:vars" => {"ntp_manage_config" => true,
-    #                    "ntp_timezone" => "America/NewYork",
-    #                    "firewall_allowed_tcp_ports" => {["22", "80", "443", "8052", "8080"]}
-    #}
+    ansible.galaxy_role_file = "requirements.yml"
+    ansible.playbook = "playbook.yml"
   end
 
 end
