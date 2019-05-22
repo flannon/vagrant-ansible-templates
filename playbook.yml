@@ -4,25 +4,26 @@
   gather_facts: true
   remote_user: root
   vars:
-    - cantaloupe_build_from_custom_source: true
-    - cantaloupe_version: 4.1
-    - cantaloupe_properties_path: /opt/tomcat/conf
+    - cantaloupe_build_from_custom_source: false
+    - cantaloupe_version: 4.1.1
+    - cantaloupe_properties_path: /opt/cantaloupe
     - tomcat8_java_opts:
       - -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties
-      - -Xmx2g
+      - -Xmx4g
     - cantaloupe_user: tomcat8
     - cantaloupe_group: tomcat8
     - cantaloupe_deploy_war: yes
     - cantaloupe_deploy_war_path: /opt/tomcat/webapps
     - cantaloupe_deploy_war_filename: cantaloupe
-    - cantaloupe_create_FilesystemCache_dir: yes
-    - cantaloupe_admin_enabled: "true"
     - cantaloupe_admin_password: "admin"
-    - cantaloupe_processor_jp2: KakaduDemoProcessor
-    - cantaloupe_test_jp2: true
     - cantaloupe_source_static: HttpSource
-    - cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: https://storage.googleapis.com/cantaloupe.dlts.org/
-    - cantaloupe_FilesystemSource_BasicLookupStrategy_path_prefix: /tmp/images/
+    - cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: http://dlib.nyu.edu/files/books/
+
+  roles:
+    - java
+    - tomcat
+    - cantaloupe
+
   post_tasks:
     - block:
       - name: install required packages
@@ -55,8 +56,3 @@
           state: restarted
         no_log: true
       when: cantaloupe_build_from_custom_source
-  roles:
-    - java
-    - tomcat
-    - cantaloupe
-    - kakadu

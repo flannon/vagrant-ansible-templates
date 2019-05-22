@@ -5,7 +5,7 @@ Vagrant.require_version ">= 2.0.1"
 
 HOSTNAME = "cantaloupe"
 CPUS = "2"
-MEMORY = "1024"
+MEMORY = "4096"
 MULTIVOL = false
 MOUNTPOINT = "/mnt"
 VAGRANTDIR = File.expand_path(File.dirname(__FILE__))
@@ -63,18 +63,10 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Run ansible provisioning
   config.vm.provision :ansible do |ansible|
-    ansible.verbose = "v"
-    #ansible.becomr = "root"
+    #ansible.verbose = "v"
     ansible.config_file = "ansible.cfg"
-    #ansible.galaxy_role_path = "provisioning/roles"
-    ansible.galaxy_role_file = "requirements/cantaloupe.yml"
-    ansible.playbook = "playbooks/cantaloupe.yml"
-    #ansible.groups = {
-    #  "group1" => ["#HOSTNAME"],
-    #  "group1:vars" => {"ntp_manage_config" => true,
-    #                    "ntp_timezone" => "America/NewYork",
-    #                    "firewall_allowed_tcp_ports" => {["22", "80", "443", "8052", "8080"]}
-    #}
+    ansible.galaxy_role_file = "requirements.yml"
+    ansible.playbook = "playbook.yml"
   end
 
 end
