@@ -1,0 +1,14 @@
+# java role
+- src: https://github.com/geerlingguy/ansible-role-java
+  version: 1.9.2
+  name: java
+
+# solr role
+- src: https://github.com/nyudlts/ansible-role-solr
+  version: master
+  name: solr
+
+# nginx role
+- src: https://github.com/geerlingguy/ansible-role-nginx
+  version: master
+  name: nginx

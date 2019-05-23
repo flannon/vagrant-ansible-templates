@@ -1,8 +1,0 @@
----
-- name: added in 2.4, previouslly you used 'include'
-  #import_tasks: redhat.yml
-  include: redhat.yml
-  when: ansible_os_platform|lower == 'redhat'
-
-- import_tasks: debian.yml
-  when: ansible_os_platform|lower == 'debian'
