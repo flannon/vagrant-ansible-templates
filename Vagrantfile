@@ -5,7 +5,7 @@ Vagrant.require_version ">= 2.0.1"
 
 HOSTNAME = "cantaloupe"
 CPUS = "2"
-MEMORY = "4096"
+MEMORY = "8192"
 MULTIVOL = false
 MOUNTPOINT = "/mnt"
 VAGRANTDIR = File.expand_path(File.dirname(__FILE__))
@@ -24,13 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
   config.vm.network :private_network, ip: "192.168.50.99",
     virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 80, host: 80,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 443, host: 443,
-    virtualbox__hostonly: true
   config.vm.network :forwarded_port, guest: 8182, host: 8182,
-    virtualbox__hostonly: true
-  config.vm.network :forwarded_port, guest: 8080, host: 8080,
     virtualbox__hostonly: true
 
   config.vm.provider :virtualbox do |vb|

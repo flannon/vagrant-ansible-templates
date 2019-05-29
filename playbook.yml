@@ -7,24 +7,19 @@
     - cantaloupe_build_from_custom_source: false
     - cantaloupe_version: 4.1.1
     - cantaloupe_properties_path: /opt/cantaloupe
-    - tomcat8_java_opts:
-      - -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties
-      - -Xmx4g
-    - cantaloupe_user: tomcat8
-    - cantaloupe_group: tomcat8
-    - cantaloupe_deploy_war: yes
-    - cantaloupe_deploy_war_path: /opt/tomcat/webapps
-    - cantaloupe_deploy_war_filename: cantaloupe
+    - cantaloupe_start_command: "/bin/java -Dcantaloupe.config={{ cantaloupe_properties_path }}/cantaloupe.properties -Xms2g -Xmx8g -jar {{ cantaloupe_symlink }}/cantaloupe-{{ cantaloupe_version }}.war"
+    - cantaloupe_user: cantaloupe
+    - cantaloupe_group: cantaloupe
     - cantaloupe_admin_password: "admin"
     - cantaloupe_source_static: HttpSource
-    - cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: http://dlib.nyu.edu/files/books/
+    - cantaloupe_HttpSource_BasicLookupStrategy_url_prefix: ""
 
   roles:
     - java
-    - tomcat
     - cantaloupe
 
   post_tasks:
+
     - block:
       - name: install required packages
         yum:
