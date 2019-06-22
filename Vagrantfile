@@ -3,8 +3,8 @@
 
 Vagrant.require_version ">= 2.0.1"
 
-HOSTNAME = "templates"
-ANSIBLEROLE = "#{HOSTNAME}"
+HOSTNAME = "template"
+PLAYBOOK = "#{HOSTNAME}"
 IPADDR = "172.25.250.254"
 CPUS = "2"
 MEMORY = "1024"
@@ -105,7 +105,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     destination: "~vagrant/inventory"
 
   config.vm.provision "file", 
-    source: "#{VAGRANTROOT}/ansible/requirements.yml", 
+    source: "#{VAGRANTROOT}/ansible/requirements/#{HOSTNAME}.yml", 
     destination: "~vagrant/requirements.yml"
 
   config.vm.provision "shell", inline: "[[ -d ~vagrant/playbooks ]] || \
@@ -175,8 +175,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :ansible do |ansible|
     ansible.verbose = "v"
     ansible.config_file = "#{VAGRANTROOT}/ansible/ansible.cfg"
-    ansible.galaxy_role_file = "#{VAGRANTROOT}/ansible/requirements.yml"
-    ansible.playbook = "#{VAGRANTROOT}/ansible/playbooks/#{ANSIBLEROLE}.yml"
+    ansible.galaxy_role_file = "#{VAGRANTROOT}/ansible/requirements/#{PLAYBOOK}.yml"
+    ansible.playbook = "#{VAGRANTROOT}/ansible/playbooks/#{PLAYBOOK}.yml"
     #ansible.groups = {
     #  "group1" => ["#{HOSTNAME}"], 
     ##  "group1:vars" => {"ntp_manage_config" => true,
