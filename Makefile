@@ -1,9 +1,15 @@
 # Targets build available ansible environmwents
 # 
-.PHONY: workstation
-workstation:
-	sed -i '' 's/templates/workstation/g' Vagrantfile
-	sed -i '' 's/192.168.0.1/172.25.250.254/g' Vagrantfile
+.PHONY: discovery
+discovery:
+	sed -i '' 's/templates/discovery/g' Vagrantfile
+	sed -i '' 's/192.168.0.1/172.39.144.12/g' Vagrantfile
+	vagrant up
+
+.PHONY: docker
+docker:
+	sed -i '' 's/templates/docker/g' Vagrantfile
+	sed -i '' 's/192.168.0.1/172.39.250.34/g' Vagrantfile
 	vagrant up
 
 .PHONY: servera
@@ -18,10 +24,10 @@ serverb:
 	sed -i '' 's/192.168.0.1/172.25.250.11/g' Vagrantfile
 	vagrant up
 
-.PHONY: discovery
-discovery:
-	sed -i '' 's/templates/discovery/g' Vagrantfile
-	sed -i '' 's/192.168.0.1/172.39.144.12/g' Vagrantfile
+.PHONY: workstation
+workstation:
+	sed -i '' 's/templates/workstation/g' Vagrantfile
+	sed -i '' 's/192.168.0.1/172.25.250.254/g' Vagrantfile
 	vagrant up
 
 .PHONY: clean
