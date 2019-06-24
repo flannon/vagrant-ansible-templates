@@ -3,9 +3,9 @@
 
 Vagrant.require_version ">= 2.0.1"
 
-HOSTNAME = "template"
+HOSTNAME = "templates"
 PLAYBOOK = "#{HOSTNAME}"
-IPADDR = "172.25.250.254"
+IPADDR = "192.168.0.1"
 CPUS = "2"
 MEMORY = "1024"
 MULTIVOL = false
