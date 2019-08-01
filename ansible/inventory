@@ -41,3 +41,7 @@ serverf:
   hosts:
     serverf.lab.example.com
 
+openshift-control:
+  hosts:
+    openshift-control.lab.example.com
+

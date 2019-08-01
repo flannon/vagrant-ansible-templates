@@ -24,6 +24,12 @@ discovery:
 	sed -i '' 's/192.168.0.1/172.39.144.12/g' Vagrantfile
 	vagrant up
 
+.PHONY: openshift-control
+openshift-control:
+	sed -i '' 's/templates/openshift-control/g' Vagrantfile
+	sed -i '' 's/192.168.0.1/172.122.217.1/g' Vagrantfile
+	vagrant up
+
 .PHONY: clean
 clean:
 	rm -f Vagrantfile

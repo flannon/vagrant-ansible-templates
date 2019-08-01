@@ -1,0 +1,65 @@
+---
+- hosts: openshift-control
+  become: yes
+  gather_facts: true
+  remote_user: vagrant
+
+  vars: 
+    ntp_manage_config: true
+    ntp_timezone: America/New_York
+    firewall_state: started
+    firewall_enabled_at_boot: true
+    firewall_allowed_tcp_ports:
+      - "22"
+    firewall_additional_rules:
+      - "iptables -A INPUT -p icmp -m comment --comment '000 accept all icmp' -j ACCEPT"
+      - "iptables -A INPUT -i lo -m comment --comment '001 accept all to lo interface' -j ACCEPT"
+      - "iptables -A INPUT -m comment --comment '003 accept related established rules' -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT"
+      - "iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT"
+      - "iptables -A INPUT -p icmp -j ACCEPT"
+      - "iptables -A INPUT -i lo -j ACCEPT"
+      - "iptables -A OUTPUT -o lo -j ACCEPT"
+      - "iptables -A INPUT -m comment --comment '910 deny all other input requests' -j DROP"
+    firewall_disable_firewalld: true
+
+  tasks:
+    - name: upgrade all packages
+      yum: 
+        name: '*'
+        state: latest
+
+    - name: Check for reboot status
+      #shell: LAST_KERNEL=$(rpm -q --last kernel | awk 'NR==1{sub(/kernel-/,""); print $1}'); CURRENT_KERNEL=$(uname -r); if [ $LAST_KERNEL != $CURRENT_KERNEL ]; then echo 'reboot'; else echo 'no'; fi
+      shell: | 
+        if [ $(rpm -q kernel|tail -n 1) != kernel-$(uname -r) ]; then 
+          echo 'reboot' 
+        else 
+          echo 'no' 
+        fi
+      ignore_errors: true
+      args:
+        executable: /bin/bash
+      register: reboot_status
+
+    - name: "Rebooting"
+      command: shutdown -r now "Reboot required for kernel update"
+      async: 0
+      poll: 0
+      when: reboot_status.stdout.find("reboot") != -1
+      register: result
+
+    - name: Waiting for reboot to complete
+      #pause: seconds=45
+      local_action: wait_for host={{ ansible_ssh_host | default(inventory_hostname) }} state=started port=22 delay=30 timeout=300 connect_timeout=15
+      when: result is changed
+
+  
+  roles:
+    #- housekeeping
+    #- firewall
+    #- ntp
+    #- logrotate
+    - openshift-control
+
+
+
