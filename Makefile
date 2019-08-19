@@ -24,6 +24,12 @@ discovery:
 	sed -i '' 's/192.168.0.1/172.39.144.12/g' Vagrantfile
 	vagrant up
 
+.PHONY: testing
+testing:
+	sed -i '' 's/templates/testing/g' Vagrantfile
+	sed -i '' 's/192.168.0.1/172.39.144.59/g' Vagrantfile
+	vagrant up
+
 .PHONY: clean
 clean:
 	rm -f Vagrantfile

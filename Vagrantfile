@@ -5,7 +5,7 @@ Vagrant.require_version ">= 2.0.1"
 
 HOSTNAME = "templates"
 ANSIBLEROLE = "#{HOSTNAME}"
-IPADDR = "172.25.250.254"
+IPADDR = "192.168.0.19"
 CPUS = "2"
 MEMORY = "1024"
 MULTIVOL = false
@@ -86,13 +86,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Load /etc/hosts
   config.vm.provision "shell", path: "./bin/hosts.sh", privileged: true
   
-  # Set ansible roles environment variable
-  # This is unused and may be set wrong, i.e. as currently
-  # configured it addresses the host context but it probably should 
-  # be the guest context, like the follwoing
-  #  ENV['ANSIBLE_ROLES_PATH'] = "#{VAGRANTROOT}/ansible/roles"
-  ENV['ANSIBLE_ROLES_PATH'] = "~vagrant/ansible/roles"
-
   config.vm.define HOSTNAME
 
   # Load ansible config to ~vagrant on the guest
@@ -160,29 +153,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     destination: "~vagrant/playbooks/localhost.yml"
 
      
-  ## Set the host: value in localhost.yml equal to #{HOSTNAME} 
-  ## from the vagran file.
-  ##  I don't think I can do this inline, I need to use the 
-  ##  shell provisioner
-  #
-  #config.vm.provision :shell, inline: "echo #{HOSTNAME} >> ~vagrant/hostname.txt"
-  #config.vm.provision :shell, inline: "echo #{HOSTNAME} $MYENV >> ~vagrant/hostname.txt", env: {"MYENV" => "myenv"}
-  #config.vm.provision :shell, inline: "sed -i s/<HOSTNAME>/${PLAYBOOKHOST}/g, env: { PLAYBOOKHOST => #HOSTNAME }"
-  #config.vm.provision :shell, inline: "sed -i s/HOSTNAME/$PLAYBOOKHOST/g ~vagrant/playbooks/localhost.yml, env: { PLAYBOOKHOST => playbookhost }"
-   
-
   # Run ansible provisioning 
   config.vm.provision :ansible do |ansible|
     ansible.verbose = "v"
     ansible.config_file = "#{VAGRANTROOT}/ansible/ansible.cfg"
     ansible.galaxy_role_file = "#{VAGRANTROOT}/ansible/requirements.yml"
+    #ansible.galaxy_roles_path = "#{VAGRANTROOT}/ansible/roles"
+    ansible.galaxy_roles_path = "#{VAGRANTROOT}/ansible/roles/thirdparty:#{VAGRANTROOT}/ansible/roles/local"
     ansible.playbook = "#{VAGRANTROOT}/ansible/playbooks/#{ANSIBLEROLE}.yml"
-    #ansible.groups = {
-    #  "group1" => ["#{HOSTNAME}"], 
-    ##  "group1:vars" => {"ntp_manage_config" => true,
-    ##                    "ntp_timezone" => "America/NewYork",
-    ##                    "firewall_allowed_tcp_ports" => {["22", "80", "443", "8052", "8080"]}
-    #}
   end
 
 end

@@ -19,13 +19,23 @@
 
 # housekeeping role
 - src: https://github.com/nyudlts/ansible-role-housekeeping
-  version: master
+  version: virtualbox
   name: housekeeping
+
+# java role
+- src: https://github.com/geerlingguy/ansible-role-java
+  version: 1.9.2
+  name: java
 
 # logrotate role
 - src: https://github.com/nickhammond/ansible-logrotate
   version: v0.0.5
   name: logrotate
+
+# nginx role
+- src: https://github.com/geerlingguy/ansible-role-nginx
+  version: master
+  name: nginx
 
 # ntp role
 - src: https://github.com/geerlingguy/ansible-role-ntp
