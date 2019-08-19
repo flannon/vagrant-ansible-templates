@@ -3,7 +3,7 @@
 
 Vagrant.require_version ">= 2.0.1"
 
-HOSTNAME = "testing"
+HOSTNAME = "templates"
 ANSIBLEROLE = "#{HOSTNAME}"
 IPADDR = "172.39.144.59"
 CPUS = "2"
