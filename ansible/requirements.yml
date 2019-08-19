@@ -19,7 +19,8 @@
 
 # housekeeping role
 - src: https://github.com/nyudlts/ansible-role-housekeeping
-  version: virtualbox
+  #version: virtualbox
+  version: d51e25e9828cb70beba71a88d57479e657bd9d2c
   name: housekeeping
 
 # java role
